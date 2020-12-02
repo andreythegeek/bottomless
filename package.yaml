@@ -1,0 +1,43 @@
+name: bottomless
+version: 1.0.0
+github: "andreythegeek/bottomless"
+license: Apache-2.0
+author: "Andrey Petrov"
+maintainer: "andrey@petrov.works"
+copyright: "2020 Andrey Petrov"
+
+extra-source-files:
+- README.org
+- CHANGELOG.org
+
+synopsis: TOML Parser
+category: TOML
+description: Read data from TOML files
+
+dependencies:
+- base >= 4.7 && < 5
+
+library:
+  source-dirs: src
+
+executables:
+  bottomless-exe:
+    main: Main.hs
+    source-dirs: app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - bottomless
+
+tests:
+  bottomless-test:
+    main: Spec.hs
+    source-dirs: test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - bottomless
