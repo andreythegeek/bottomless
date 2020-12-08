@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: d913006b90622f2ee9aa44657f4095e28fbf528aca9a71605f4dcbac5d29f50a
+-- hash: dd74a78dbb8d569baf41ae8b7c1c1d9cb39850829441b1844640bbecaf9f8bb5
 
 name:           bottomless
 version:        1.0.0
@@ -20,8 +20,8 @@ license:        Apache-2.0
 license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
-    README.org
-    CHANGELOG.org
+    README.md
+    CHANGELOG.md
 
 source-repository head
   type: git
@@ -45,7 +45,7 @@ test-suite bottomless-test
       Paths_bottomless
   hs-source-dirs:
       test
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
     , bottomless
