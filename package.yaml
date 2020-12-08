@@ -20,17 +20,6 @@ dependencies:
 library:
   source-dirs: src
 
-executables:
-  bottomless-exe:
-    main: Main.hs
-    source-dirs: app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - bottomless
-
 tests:
   bottomless-test:
     main: Spec.hs
