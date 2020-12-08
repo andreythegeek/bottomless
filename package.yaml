@@ -7,8 +7,8 @@ maintainer: "andrey@petrov.works"
 copyright: "2020 Andrey Petrov"
 
 extra-source-files:
-- README.org
-- CHANGELOG.org
+- README.md
+- CHANGELOG.md
 
 synopsis: TOML Parser
 category: TOML
