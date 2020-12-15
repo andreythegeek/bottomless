@@ -1,2 +1,4 @@
+import TOML (parse)
+
 main :: IO ()
-main = putStrLn "Test suite not yet implemented"
+main = print $ parse "dniwe ebanoe"

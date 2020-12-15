@@ -1,7 +1,7 @@
-module TOML (Input, Document, parse) where
+module TOML (Source, Document, parse) where
 
-type Input = String
-type Document = String
+import TOML.Parser (Source, run)
+import TOML.Document (Document, render)
 
-parse :: Input -> Document
-parse source = source
+parse :: Source -> Document
+parse = render . run 
