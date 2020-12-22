@@ -1,51 +1,53 @@
-module TOML.Parser.TokenStream (Source, Token, TokenStream, translate) where
-
-import Data.Char (isAlpha)
+module TOML.Parser.TokenStream (Source, Token, Stream, translate) where
 
 type Source = String
 
-data Token = Key | Assignment | Input deriving (Show, Eq)
+data Token = Key | Assign deriving (Eq, Show)
 
-type TokenStream = [Token]
+type Stream = [Token]
 
-data State = Waiting | ReadKey | ReadInput deriving (Show, Eq)
+data State = Idle | ReadKey deriving (Show, Eq)
 
 type Accumulator = Source
 
-type Mask = (State, Accumulator, TokenStream)
+type Mask = (State, Accumulator, Stream)
 
 type CurrentInput = Char 
 
 type Event = (CurrentInput, Mask)
 
-translate :: Source -> TokenStream
+translate :: Source -> Stream 
 translate source = walk source emptyMask
 
-walk :: Source -> Mask -> TokenStream
-walk input mask =
-    if null input then
+walk :: Source -> Mask -> Stream 
+walk source mask =
+    if null source then
         result mask
     else
-        walk rest $ handle event 
-            where current = head input
-                  rest    = tail input
-                  event   = (current, mask)
-
-mask :: State -> Accumulator -> TokenStream -> Mask
-mask state accumulator tokenStream = (state, accumulator, tokenStream)
+        walk rest $ handle $ generate current mask 
+            where
+                current = head source 
+                rest    = tail source 
 
 emptyMask :: Mask
-emptyMask = mask state accumulator tokenStream
-    where state       = Waiting
-          accumulator = ""
-          tokenStream = []
+emptyMask = mask state accumulator stream  
+    where
+        state       = Idle
+        accumulator = ""
+        stream      = []
 
-result :: Mask -> TokenStream
+mask :: State -> Accumulator -> Stream-> Mask
+mask state accumulator tokenStream = (state, accumulator, tokenStream)
+
+generate :: CurrentInput -> Mask -> Event
+generate input mask = (input, mask)
+
+result :: Mask -> Stream 
 result (_, _, result) = result
 
 handle :: Event -> Mask
 handle event =
-    case input of
+    case source of
         '#' -> takeComment event
         '=' -> takeAssignment event
         '"' -> takeString event
@@ -56,7 +58,8 @@ handle event =
         '}' -> mask
         ' ' -> takeSpace event 
         _   -> takeAny event
-    where (input, mask) = event
+    where
+        (source, mask) = event
 
 takeComment :: Event -> Mask
 takeComment (_, mask) = mask
@@ -64,9 +67,10 @@ takeComment (_, mask) = mask
 takeAssignment :: Event -> Mask
 takeAssignment (_, (_, _, tokenStream)) =
     mask state accumulator result
-        where state       = Waiting
-              accumulator = ""
-              result      = tokenStream ++ [Assignment]
+        where
+            state       = Idle
+            accumulator = ""
+            result      = tokenStream ++ [Assign]
 
 takeString :: Event -> Mask
 takeString (_, mask) = mask
@@ -74,12 +78,13 @@ takeString (_, mask) = mask
 takeSpace :: Event -> Mask
 takeSpace (_, mask) =
     case state of
-        Waiting -> mask
-        ReadKey -> (Waiting, "", tokenStream ++ [Key])
-    where (state, _, tokenStream) = mask
+        Idle    -> mask
+        ReadKey -> (Idle, "", tokenStream ++ [Key])
+    where
+        (state, _, tokenStream) = mask
 
 takeAny :: Event -> Mask
-takeAny (input, (state, accumulator, tokenStream)) =
+takeAny (source , (state, accumulator, tokenStream)) =
     case state of
-        Waiting -> (ReadKey, accumulator ++ [input], tokenStream)
-        ReadKey -> (ReadKey, accumulator ++ [input], tokenStream)
+        Idle    -> (ReadKey, accumulator ++ [source ], tokenStream)
+        ReadKey -> (ReadKey, accumulator ++ [source ], tokenStream)

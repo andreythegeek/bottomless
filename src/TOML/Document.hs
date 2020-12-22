@@ -1,8 +1,8 @@
-module TOML.Document (Document, render) where
+module TOML.Document (Document, create) where
 
-import TOML.Parser (SyntaxTree)
+import TOML.Parser (AST)
 
-type Document = SyntaxTree
+type Document = AST
 
-render :: SyntaxTree -> Document
-render syntaxTree = document where document = syntaxTree
+create :: AST -> Document
+create syntaxTree = document where document = syntaxTree

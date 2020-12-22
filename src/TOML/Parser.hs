@@ -1,7 +1,7 @@
-module TOML.Parser (Source, SyntaxTree, run) where
+module TOML.Parser (Source, AST, scan) where
 
 import TOML.Parser.TokenStream (Source, translate)
-import TOML.Parser.SyntaxTree (SyntaxTree, restore)
+import TOML.Parser.AST (AST, restore)
 
-run :: Source -> SyntaxTree
-run = restore . translate
+scan :: Source -> AST 
+scan = restore . translate

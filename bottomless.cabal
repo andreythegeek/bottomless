@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a2ec8821ae3b200235f559d4a2d3a2840b7d52f37380063f22f0971efd9ec174
+-- hash: faa8f5929c5c805169cf67f238373178392200166b796ad7be305785ee466a2f
 
 name:           bottomless
 version:        1.0.0
@@ -32,8 +32,11 @@ library
       TOML
       TOML.Document
       TOML.Parser
-      TOML.Parser.SyntaxTree
+      TOML.Parser.AST
       TOML.Parser.TokenStream
+      TOML.Parser.TokenStream.State
+      TOML.Parser.TokenStream.State.Event
+      TOML.Parser.TokenStream.State.Mask
   other-modules:
       Paths_bottomless
   hs-source-dirs:
