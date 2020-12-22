@@ -12,7 +12,7 @@ extra-source-files:
 
 synopsis: TOML Parser
 category: TOML
-description: Read data from TOML files
+description: Translate TOML files to common data structures
 
 dependencies:
 - base >= 4.7 && < 5
