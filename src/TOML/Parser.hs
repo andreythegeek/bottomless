@@ -1,7 +1,8 @@
-module TOML.Parser (Source, AST, scan) where
+module TOML.Parser (AST, translate) where
 
-import TOML.Parser.TokenStream (Source, translate)
-import TOML.Parser.AST (AST, restore)
+import TOML.Scanner (Token)
 
-scan :: Source -> AST 
-scan = restore . translate
+type AST = [Token]
+
+translate :: [Token] -> AST
+translate stream = stream 

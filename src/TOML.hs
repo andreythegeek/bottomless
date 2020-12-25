@@ -1,7 +1,8 @@
-module TOML (Source, Document, parse) where
+module TOML (Document, parse) where
 
-import TOML.Parser (Source, scan)
+import TOML.Scanner (scan)
+import TOML.Parser (translate)
 import TOML.Document (Document, create)
 
-parse :: Source -> Document
-parse = create . scan 
+parse :: String -> Document
+parse = create . translate .scan

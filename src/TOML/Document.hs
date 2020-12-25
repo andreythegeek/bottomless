@@ -5,4 +5,4 @@ import TOML.Parser (AST)
 type Document = AST
 
 create :: AST -> Document
-create syntaxTree = document where document = syntaxTree
+create = id 
