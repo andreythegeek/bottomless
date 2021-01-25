@@ -1,10 +1,14 @@
-module TOML.Scanner (Token, scan) where
+module TOML.Scanner (Constant(..), Token(..), scan) where
 
-type Token = String
+data Constant = AnyInt Int | AnyString String deriving Show -- FIXME Move to place where rules applied.
+
+-- TODO Consider using pattern synonyms for syntax parts and empty strings.
+
+data Token = Key String | Syntax Char | Payload Constant deriving Show
 
 scan :: String -> [Token] 
 scan source 
     | null source = []
     | otherwise   = scan rest
   where
-    rest = tail source
+    (current : rest) = source 
