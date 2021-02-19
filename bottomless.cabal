@@ -4,13 +4,13 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b76424e06c9f980f6306144e4cc03983aab4afa74ab24dfd414fe782d91bde7e
+-- hash: 6c5e163b3e179e57ea4d33fa1de1bde49ea916a05250d6a441bd6b725daea356
 
 name:           bottomless
 version:        1.0.0
 synopsis:       TOML Parser
-description:    Translate TOML files to common data structures
-category:       TOML
+description:    Turn TOML string into common data structure
+category:       TOML, toml, parser, config, configuration
 homepage:       https://github.com/andreythegeek/bottomless#readme
 bug-reports:    https://github.com/andreythegeek/bottomless/issues
 author:         Andrey Petrov
@@ -33,6 +33,7 @@ library
       TOML.Document
       TOML.Parser
       TOML.Scanner
+      TOML.Scanner.Input
   other-modules:
       Paths_bottomless
   hs-source-dirs:
