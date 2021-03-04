@@ -1,10 +1,10 @@
 name: bottomless
-version: 1.0.0
+version: 1.0.0.0
 github: "andreythegeek/bottomless"
 license: Apache-2.0
 author: "Andrey Petrov"
 maintainer: "andrey@petrov.works"
-copyright: "2020 Andrey Petrov"
+copyright: "2021 Andrey Petrov"
 
 extra-source-files:
 - README.md
@@ -12,7 +12,7 @@ extra-source-files:
 
 synopsis: TOML Parser
 category: TOML, toml, parser, config, configuration
-description: Turn TOML string into common data structure
+description: Translate documents to common data structures
 
 dependencies:
 - base >= 4.7 && < 5
