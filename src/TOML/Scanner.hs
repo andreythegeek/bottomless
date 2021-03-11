@@ -1,65 +1,52 @@
-module TOML.Scanner (Constant(..), Token(..), scan) where
-
-data Constant = AnyInt Int | AnyString String deriving Show
+module TOML.Scanner ( Token(..)
+                    , Constant(..)
+                    , scan
+                    ) where
 
 data Token = Key String
-           | Syntax Char
+           | Operator Char
            | Payload Constant
            deriving Show
 
-data State = Idle 
+data Constant = AnyInt Int
+              | AnyBool Bool
+              | AnyString String
+              deriving Show
+
+data State = Idle
            | Comment
-           | CommentInput
            deriving (Show, Eq)
 
 type Scope = String
 
-data Mask = Mask State Scope [Token]
+data Mask = Mask [State] Scope [Token]
 
-scan :: String -> [Token] 
-scan source = walk source $ Mask state scope result 
+type Transition = Mask -> Char -> Mask
+
+scan :: String -> [Token]
+scan = walk event 
   where
-    state  = Idle
-    scope  = ""
-    result = []
+    event = Mask [Idle] "" []
 
-walk :: String -> Mask -> [Token]
-walk [] mask             = terminate mask
-walk [input] mask        = terminate $ process input mask
-walk (input : rest) mask = walk rest $ process input mask
+walk :: Mask -> String -> [Token]
+walk mask []             = terminate mask
+walk mask [input]        = terminate $ process mask input
+walk mask (input : rest) = walk (process mask input) rest
+
+process :: Transition 
+process mask input = 
+  case state of
+    Idle    -> fromIdle mask input
+    Comment -> fromComment mask input
+  where
+    state = last history
+    (Mask history _ _) = mask
+  
+fromIdle :: Transition
+fromIdle mask input = mask
+
+fromComment :: Transition 
+fromComment mask input = mask
 
 terminate :: Mask -> [Token]
-terminate (Mask state scope result) =
-  case state of
-    Idle         -> result 
-    Comment      -> result
-    CommentInput -> result 
-
-process :: Char -> Mask -> Mask
-process input mask =
-  case input of
-    '#'  -> processComment mask 
-    '='  -> processAny mask
-    ' '  -> processSpace mask
-    '"'  -> processAny mask
-    '\'' -> processAny mask
-    '\\' -> processAny mask
-    '\n' -> processLineEnd mask
-    _    -> processAny mask 
-
-processComment :: Mask -> Mask
-processComment (Mask state scope result) 
-  | state == Idle = Mask Comment scope result
-  | otherwise = Mask state scope result
-
-processCommentInput :: Mask -> Mask
-processCommentInput mask = mask
-
-processSpace :: Mask -> Mask
-processSpace mask = mask
-
-processLineEnd :: Mask -> Mask
-processLineEnd mask = mask
-
-processAny :: Mask -> Mask
-processAny mask = mask
+terminate (Mask _ _ stream) = stream
