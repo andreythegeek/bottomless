@@ -18,35 +18,18 @@ data State = Idle
            deriving (Show, Eq)
 
 type Scope = String
-
-data Mask = Mask [State] Scope [Token]
+type ChangeLog = [State]
+type Mask = (ChangeLog, Scope, [Token])
 
 type Transition = Mask -> Char -> Mask
 
 scan :: String -> [Token]
-scan = walk event 
+scan = terminate . foldr process mask
   where
-    event = Mask [Idle] "" []
+    mask = ([Idle], "", [])
 
-walk :: Mask -> String -> [Token]
-walk mask []             = terminate mask
-walk mask [input]        = terminate $ process mask input
-walk mask (input : rest) = walk (process mask input) rest
-
-process :: Transition 
-process mask input = 
-  case state of
-    Idle    -> fromIdle mask input
-    Comment -> fromComment mask input
-  where
-    state = last history
-    (Mask history _ _) = mask
-  
-fromIdle :: Transition
-fromIdle mask input = mask
-
-fromComment :: Transition 
-fromComment mask input = mask
+process :: Char -> Mask -> Mask
+process input mask = mask
 
 terminate :: Mask -> [Token]
-terminate (Mask _ _ stream) = stream
+terminate (_, _, stream) = stream

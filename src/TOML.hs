@@ -5,4 +5,4 @@ import TOML.Parser (translate)
 import TOML.Document (Document, create)
 
 parse :: String -> Document
-parse = create . translate .scan
+parse = create . translate . scan
